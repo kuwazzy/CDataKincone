@@ -1,0 +1,81 @@
+<rsb:script xmlns:rsb="http://www.rssbus.com/ns/rsbscript/2" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- See Column Definitions to specify column behavior and use XPaths to extract column values from JSON. -->
+  <rsb:info title="JSONData" desc="Generated schema file." xmlns:other="http://www.rssbus.com/ns/rsbscript/2/other">
+    <!-- You can modify the name, type, and column size here.  The name must match the values in the rsb:script block below -->
+    <attr name="id"                     xs:type="string"   readonly="false" other:xPath="/response/workflows/id"   />
+    <attr name="work_day"               xs:type="date"     readonly="false" other:xPath="work_day"                 />
+    <attr name="start"                  xs:type="datetime" readonly="false" other:xPath="start"                    />
+    <attr name="end"                    xs:type="datetime" readonly="false" other:xPath="end"                      />
+    <attr name="break_hours"            xs:type="string"   readonly="false" other:xPath="break_hours"              />
+    <attr name="work_hours"             xs:type="string"   readonly="false" other:xPath="work_hours"               />
+    <attr name="actual_work_hours"      xs:type="string"   readonly="false" other:xPath="actual_work_hours"        />
+    <attr name="paid_holiday"           xs:type="double"   readonly="false" other:xPath="paid_holiday"             />
+    <attr name="regular_work_hours"     xs:type="string"   readonly="false" other:xPath="regular_work_hours"       />
+    <attr name="overtime_work_hours"    xs:type="string"   readonly="false" other:xPath="overtime_work_hours"      />
+    <attr name="latenight_work_hours"   xs:type="string"   readonly="false" other:xPath="latenight_work_hours"     />
+    <attr name="come_late_hours"        xs:type="string"   readonly="false" other:xPath="come_late_hours"          />
+    <attr name="leave_early_hours"      xs:type="string"   readonly="false" other:xPath="leave_early_hours"        />
+    <attr name="fixed_work_hours"       xs:type="string"   readonly="false" other:xPath="fixed_work_hours"         />
+    <attr name="included_break_hours"   xs:type="string"   readonly="false" other:xPath="included_break_hours"     />
+    <attr name="filled_work_hours"      xs:type="string"   readonly="false" other:xPath="filled_work_hours"        />
+    <attr name="come_late"              xs:type="boolean"  readonly="false" other:xPath="come_late"                />
+    <attr name="leave_early"            xs:type="boolean"  readonly="false" other:xPath="leave_early"              />
+    <attr name="allnight"               xs:type="boolean"  readonly="false" other:xPath="allnight"                 />
+    <attr name="start_device"           xs:type="unknown"  readonly="false" other:xPath="start_device"             />
+    <attr name="end_device"             xs:type="unknown"  readonly="false" other:xPath="end_device"               />
+    <attr name="note"                   xs:type="string"   readonly="false" other:xPath="note"                     />
+    <attr name="start_latitude"         xs:type="unknown"  readonly="false" other:xPath="start_latitude"           />
+    <attr name="start_longitude"        xs:type="unknown"  readonly="false" other:xPath="start_longitude"          />
+    <attr name="end_latitude"           xs:type="unknown"  readonly="false" other:xPath="end_latitude"             />
+    <attr name="end_longitude"          xs:type="unknown"  readonly="false" other:xPath="end_longitude"            />
+    <input name="email"                 xs:type="string"   readonly="false"                                        />
+    <input name="term"                  xs:type="string"   readonly="false"                                        />
+  </rsb:info>
+
+  <rsb:set attr="uri" value="https://api.kincone.com/v1/attendance/workflows?status=0" />
+
+  <!-- Column XPaths are relative to a RepeatElement that splits the JSON into rows. -->
+  <rsb:set attr="RepeatElement" value="/response/workflows/details" />
+
+  <!-- The GET method corresponds to SELECT. Within the script block, you can see the URI modified to append a query string parameter. The results of processing are pushed to the schema's output. See SELECT Execution for more information. -->
+  <rsb:script method="GET">
+    <rsb:check attr="_input.email">
+      <rsb:set attr="uri" value="[uri]&email=[_input.email]"/>
+    </rsb:check>
+    <rsb:check attr="_input.term">
+      <rsb:set attr="uri" value="[uri]&term=[_input.term]"/>
+    </rsb:check>
+    <rsb:call op="jsonproviderGet">
+      <rsb:push/>
+    </rsb:call>
+  </rsb:script>
+
+  <!-- To add support for INSERTS please see the INSERT Execution page within the help for further information and examples. -->
+  <rsb:script method="POST">
+    <rsb:set attr="method" value="POST"/>
+    <rsb:call op="jsonproviderGet">
+      <rsb:throw code="500" desc="Inserts are not currently supported."/>
+      <rsb:push/>
+    </rsb:call>
+  </rsb:script>
+
+  <!-- To add support for UPDATES please see the UPDATE Execution page within the help for further information and examples. -->
+  <rsb:script method="MERGE">
+    <rsb:set attr="method" value="PUT"/>
+    <rsb:call op="jsonproviderGet">
+      <rsb:throw code="500" desc="Updates are not currently supported."/>
+      <rsb:push/>
+    </rsb:call>
+  </rsb:script>
+
+  <!-- To add support for DELETES please see the DELETE Execution page within the help for further information and examples. -->
+  <rsb:script method="DELETE">
+    <rsb:set attr="method" value="DELETE"/>
+    <rsb:call op="jsonproviderGet">
+      <rsb:throw code="500" desc="Deletes are not currently supported."/>
+      <rsb:push/>
+    </rsb:call>
+  </rsb:script>
+
+</rsb:script>
